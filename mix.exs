@@ -1,26 +1,26 @@
-defmodule Sqlitex.Mixfile do
+defmodule Sqlcx.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :sqlitex,
+    [app: :sqlcx,
      version: "1.0.0",
      elixir: "~> 1.2",
      deps: deps,
      package: package,
      description: """
-      A thin Elixir wrapper around esqlite
+      A thin Elixir wrapper around esqlcipher
     """]
   end
 
   # Configuration for the OTP application
   def application do
-    [applications: [:logger, :esqlite]]
+    [applications: [:logger, :esqlcipher]]
   end
 
   # Type `mix help deps` for more examples and options
   defp deps do
     [
-      {:esqlite, "~> 0.2.0"},
+      {:esqlcipher, "~> 1.0.0"},
       {:decimal, "~> 1.1.0"},
 
       {:dialyze, "~> 0.2.0", only: :dev},
@@ -31,10 +31,10 @@ defmodule Sqlitex.Mixfile do
   end
 
   defp package do
-   [maintainers: ["Michael Ries", "Jason M Barnes", "Graeme Coupar"],
+   [maintainers: ["Felix Kiunke"],
      licenses: ["MIT"],
      links: %{
-      github: "https://github.com/mmmries/sqlitex",
-      docs: "http://hexdocs.pm/sqlitex"}]
+      github: "https://github.com/FelixKiunke/sqlcx",
+      docs: "http://hexdocs.pm/sqlcx"}]
   end
 end

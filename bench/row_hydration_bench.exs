@@ -31,10 +31,10 @@ defmodule RowHydrationBench do
    {26, "Ny and Chris", "2013-08-30 22:58:52.950786", "2013-09-06 22:30:25.684407", "Team"}]
 
   bench "hydrate keyword list rows" do
-    Sqlitex.Row.from(@types, @columns, @rows, [])
+    Sqlcx.Row.from(@types, @columns, @rows, [])
   end
 
   bench "hydrate map rows" do
-    Sqlitex.Row.from(@types, @columns, @rows, %{})
+    Sqlcx.Row.from(@types, @columns, @rows, %{})
   end
 end

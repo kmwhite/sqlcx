@@ -1,12 +1,12 @@
-defmodule Sqlitex.Query do
-  alias Sqlitex.Statement
+defmodule Sqlcx.Query do
+  alias Sqlcx.Statement
 
   @doc """
   Runs a query and returns the results.
 
   ## Parameters
 
-  * `db` - A sqlite database.
+  * `db` - A sqlcipher database.
   * `sql` - The query to run as a string.
   * `opts` - Options to pass into the query.  See below for details.
 
@@ -21,8 +21,8 @@ defmodule Sqlitex.Query do
   * {:error, _} on failure.
   """
 
-  @spec query(Sqlitex.connection, String.t | char_list) :: [ [] ] | Sqlitex.sqlite_error
-  @spec query(Sqlitex.connection, String.t | char_list, [bind: [], into: Enum.t]) :: [ Enum.t ] | Sqlitex.sqlite_error
+  @spec query(Sqlcx.connection, String.t | char_list) :: [ [] ] | Sqlcx.sqlite_error
+  @spec query(Sqlcx.connection, String.t | char_list, [bind: [], into: Enum.t]) :: [ Enum.t ] | Sqlcx.sqlite_error
   def query(db, sql, opts \\ []) do
     with {:ok, db} <- Statement.prepare(db, sql),
          {:ok, db} <- Statement.bind_values(db, Dict.get(opts, :bind, [])),
@@ -31,15 +31,15 @@ defmodule Sqlitex.Query do
   end
 
   @doc """
-  Same as `query/3` but raises a Sqlitex.QueryError on error.
+  Same as `query/3` but raises a Sqlcx.QueryError on error.
 
   Returns the results otherwise.
   """
-  @spec query!(Sqlitex.connection, String.t | char_list) :: [ [] ]
-  @spec query!(Sqlitex.connection, String.t | char_list, [bind: [], into: Enum.t]) :: [ Enum.t ]
+  @spec query!(Sqlcx.connection, String.t | char_list) :: [ [] ]
+  @spec query!(Sqlcx.connection, String.t | char_list, [bind: [], into: Enum.t]) :: [ Enum.t ]
   def query!(db, sql, opts \\ []) do
     case query(db, sql, opts) do
-      {:error, reason} -> raise Sqlitex.QueryError, reason: reason
+      {:error, reason} -> raise Sqlcx.QueryError, reason: reason
       {:ok, results} -> results
     end
   end

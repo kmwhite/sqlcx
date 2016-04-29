@@ -1,4 +1,4 @@
-defmodule Sqlitex.Server do
+defmodule Sqlcx.Server do
   use GenServer
 
   def start_link(db_path, opts \\ []) do
@@ -8,24 +8,24 @@ defmodule Sqlitex.Server do
   ## GenServer callbacks
 
   def init(db_path) do
-    case Sqlitex.open(db_path) do
+    case Sqlcx.open(db_path) do
       {:ok, db} -> {:ok, db}
       {:error, reason} -> {:stop, reason}
     end
   end
 
   def handle_call({:exec, sql}, _from, db) do
-    result = Sqlitex.exec(db, sql)
+    result = Sqlcx.exec(db, sql)
     {:reply, result, db}
   end
 
   def handle_call({:query, sql, opts}, _from, db) do
-    rows = Sqlitex.query(db, sql, opts)
+    rows = Sqlcx.query(db, sql, opts)
     {:reply, rows, db}
   end
 
   def handle_call({:create_table, name, table_opts, cols}, _from, db) do
-    result = Sqlitex.create_table(db, name, table_opts, cols)
+    result = Sqlcx.create_table(db, name, table_opts, cols)
     {:reply, result, db}
   end
 
@@ -34,7 +34,7 @@ defmodule Sqlitex.Server do
   end
 
   def terminate(_reason, db) do
-    Sqlitex.close(db)
+    Sqlcx.close(db)
     :ok
   end
 
