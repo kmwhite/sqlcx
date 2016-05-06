@@ -40,6 +40,10 @@ defmodule Sqlcx.Server do
 
   ## Public API
 
+  def rekey(pid, password, opts \\ []) do
+    GenServer.call(pid, {:rekey, password}, timeout(opts))
+  end
+
   def exec(pid, sql, opts \\ []) do
     GenServer.call(pid, {:exec, sql}, timeout(opts))
   end

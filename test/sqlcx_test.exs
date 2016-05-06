@@ -2,6 +2,7 @@ defmodule SqlcxTest do
   use ExUnit.Case
 
   @shared_cache 'file::memory:?cache=shared'
+  @test_db [File.cwd!, "test", "test.db"] |> Path.join
 
   setup_all do
     {:ok, db} = Sqlcx.open(@shared_cache)
@@ -9,6 +10,18 @@ defmodule SqlcxTest do
       Sqlcx.close(db)
     end
     {:ok, golf_db: TestDatabase.init(db)}
+  end
+
+  test "encryption" do
+    try do
+      {:ok, db} = Sqlcx.open_encrypted(@test_db, <<1,2,0,3,4>>)
+      :ok = Sqlcx.exec(db, "CREATE TABLE test(a INT, b TEXT)")
+      :ok = Sqlcx.rekey(db, "abcd")
+      :ok = Sqlcx.close(db)
+      {:ok, _} = Sqlcx.open_encrypted(@test_db, "abcd")
+    after
+      File.rm!(@test_db)
+    end
   end
 
   test "server basic query" do

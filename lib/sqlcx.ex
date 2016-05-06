@@ -15,8 +15,30 @@ defmodule Sqlcx do
     :esqlcipher.open(path)
   end
 
+  def open_encrypted(path, password) when is_binary(path), do:
+      open_encrypted(String.to_char_list(path), password)
+  def open_encrypted(path, password) do
+    :esqlcipher.open_encrypted(path, password)
+  end
+
+  @spec rekey(connection, String.t) :: :ok | sqlite_error
+  def rekey(db, password) do
+    :esqlcipher.rekey(password, db)
+  end
+
+  def with_db(path, fun) when is_binary(path),
+      do: with_db(String.to_char_list(path), fun)
   def with_db(path, fun) do
     {:ok, db} = open(path)
+    res = fun.(db)
+    close(db)
+    res
+  end
+
+  def with_encrypted_db(path, password, fun) when is_binary(path),
+      do: with_encrypted_db(String.to_char_list(path), password, fun)
+  def with_encrypted_db(path, password, fun) do
+    {:ok, db} = open_encrypted(path, password)
     res = fun.(db)
     close(db)
     res
