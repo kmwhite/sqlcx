@@ -1,14 +1,16 @@
 defmodule Sqlcx.Server do
   use GenServer
 
-  def start_link(db_path, opts \\ []) do
-    GenServer.start_link(__MODULE__, db_path, opts)
+  def start_link({db_path, password}, opts \\ []) do
+    GenServer.start_link(__MODULE__, {db_path, password}, opts)
   end
 
   ## GenServer callbacks
 
-  def init(db_path) do
-    case Sqlcx.open(db_path) do
+  def init({db_path, password}) do
+    res = if password == nil, do: Sqlcx.open(db_path),
+                              else: Sqlcx.open_encrypted(db_path, password)
+    case res do
       {:ok, db} -> {:ok, db}
       {:error, reason} -> {:stop, reason}
     end
